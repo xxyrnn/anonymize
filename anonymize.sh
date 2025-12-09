@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SLEEP_TIME=30 # sleep for these many seconds between one restart and the next
+SLEEP_TIME=30 # sleep for these many seconds between restarts
 
 if [ $EUID -ne 0 ]; then
     tput setaf 1
