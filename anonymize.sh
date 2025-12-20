@@ -31,15 +31,24 @@ trap 'handler' INT
 REAL_HOME=$(getent passwd $(logname) | cut -d: -f6)
 config_file="$REAL_HOME/"
 
-if [ $SHELL == /bin/zsh ]; then
-    config_file+=".zshrc"
-elif [ $SHELL == /bin/bash ]; then
+case $SHELL in
+  */bash)
     config_file+=".bashrc"
-elif [ $SHELL == /bin/fish ]; then
+    ;;
+  */zsh)
+    config_file+=".zshrc"
+    ;;
+  */fish)
     config_file+=".config/fish/config.fish"
-elif [ $SHELL == /bin/csh ]; then
+    ;;
+  */csh)
     config_file+=".cshrc"
-fi
+    ;;
+  *)
+    echo "[!] Shell not supported by script"
+    exit 1
+    ;;
+esac
 
 # edit configuration file to proxify shells
 cp $config_file "$config_file.bak"
