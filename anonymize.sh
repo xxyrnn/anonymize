@@ -1,5 +1,10 @@
 #!/bin/bash
 
+########################
+# file:   anonymize.sh #
+# author: xxyrnn       #
+########################
+
 SLEEP_TIME=30 # sleep for these many seconds between restarts
 
 if [ $EUID -ne 0 ]; then
