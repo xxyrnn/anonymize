@@ -16,23 +16,14 @@ proxied.
 
 ## Installation
 
-1. Install TOR:
+1. Download `install.sh` from the [latest release](https://github.com/xxyrnn/anonymize/releases/latest)
+2. Make the installation script executable
    ```bash
-   sudo pacman -Sy tor # Arch-based
-   sudo apt update && sudo apt install tor # Debian/Ubuntu-based
-   sudo rpm -Fi tor # Red Hat-based
-   sudo dnf check-update && sudo dnf install tor # Fedora-based
+   chmod +x install.sh
    ```
-
-2. Clone the repository and cd into it:
+3. Run the installation script
    ```bash
-   git clone https://github.com/xxyrnn/anonymize.git
-   cd anonymize
-   ```
-
-3. Make the script executable:
-   ```bash
-   chmod +x anonymize.sh
+   ./install.sh
    ```
 
 ## Usage
