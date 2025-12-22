@@ -5,22 +5,70 @@
 # author: xxyrnn   #
 ####################
 
-if [ ! -f /usr/sbin/tor ]; then
-  case $(cat /etc/*-release | grep "DISTRIB_ID" | cut -d '"' -f 2) in
-    Arch)
-      sudo pacman -Sy tor
+pm_fallback() {
+  if command -v apt >/dev/null 2>&1; then
+    echo apt
+  elif command -v dnf >/dev/null 2>&1; then
+    echo dnf
+  elif command -v pacman >/dev/null 2>&1; then
+    echo pacman
+  elif command -v zypper >/dev/null 2>&1; then
+    echo zypper
+  else
+    echo "[!] Unsupported OS"
+    return 1
+  fi
+}
+
+detect_package_manager() {
+  if [ -r /etc/os-release ]; then
+    . /etc/os-release
+
+    case $ID in
+      debian|ubuntu|linuxmint)
+        echo apt
+        ;;
+      fedora|rhel|centos|rocky|almalinux)
+        echo dnf
+        ;;
+      arch|manjaro|endeavouros)
+        echo pacman
+        ;;
+      opensuse*|sles)
+        echo zypper
+        ;;
+      *)
+        echo $(pm_fallback)
+        ;;
+    esac
+  else
+    echo "[!] Unsupported OS"
+    return 1
+  fi
+}
+
+if ! command -v tor >/dev/null 2>&1; then
+  PM=$(detect_package_manager) || {
+    echo "[!] Unsupported OS" >&2
+    exit 1
+  }
+
+  case $PM in
+    apt)
+      sudo apt update && sudo apt install -y tor
       ;;
-    Debian | Ubuntu)
-      sudo apt update && sudo apt install tor
+    dnf)
+      sudo dnf check-update && sudo dnf install -y tor
       ;;
-    Fedora)
-      sudo dnf check-update && sudo dnf install tor
+    pacman)
+      sudo pacman -Sy --noconfirm tor
       ;;
-    SUSE | RedHat)
-      sudo rpm -Fi tor
+    zypper)
+      sudo zypper install -y tor
       ;;
     *)
-      echo "[!] Unsupported OS"
       ;;
   esac
+else
+  echo "[*] TOR already installed"
 fi
