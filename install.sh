@@ -1,9 +1,9 @@
 #!/bin/bash
 
-####################
-# file:   setup.sh #
-# author: xxyrnn   #
-####################
+######################
+# file:   install.sh #
+# author: xxyrnn     #
+######################
 
 pm_fallback() {
   if command -v apt >/dev/null 2>&1; then
@@ -53,6 +53,8 @@ if ! command -v tor >/dev/null 2>&1; then
     exit 1
   }
 
+  echo "[*] Installing TOR..."
+
   case $PM in
     apt)
       sudo apt update && sudo apt install -y tor
@@ -69,6 +71,13 @@ if ! command -v tor >/dev/null 2>&1; then
     *)
       ;;
   esac
+
+  echo "[*] TOR installed"
+  echo "[*] Getting anonymize.sh"
+  wget https://raw.githubusercontent.com/xxyrnn/anonymize/refs/heads/main/anonymize.sh
+  echo "[*] Making anonymize.sh executable"
+  chmod +x anonymize.sh
+  echo "[*] Installation complete"
 else
   echo "[*] TOR already installed"
 fi
