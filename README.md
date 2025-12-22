@@ -24,9 +24,10 @@ proxied.
    sudo dnf check-update && sudo dnf install tor # Fedora-based
    ```
 
-2. Clone the repository:
+2. Clone the repository and cd into it:
    ```bash
    git clone https://github.com/xxyrnn/anonymize.git
+   cd anonymize
    ```
 
 3. Make the script executable:
