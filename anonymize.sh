@@ -19,7 +19,7 @@ stty -echoctl # hide ^C
 # function called by trap
 handler() {
     tput setaf 1
-    echo " [-] CTRL + C detected"
+    echo -e "\n[-] CTRL + C detected"
     echo "[-] Stopping TOR..."
     tput sgr0
     sleep 1
@@ -64,7 +64,7 @@ echo "[-] Starting TOR"
 systemctl start tor
 
 while true; do
-    printf "\r[*] Current IP: $(curl https://2ip.io/)"
+    printf "\r[*] Current IP: $(curl --silent https://2ip.io/)"
     sleep $SLEEP_TIME
     systemctl restart tor
 done

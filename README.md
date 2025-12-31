@@ -35,6 +35,3 @@ Run the script:
 
 Now you can either put the script in background and keep working in the same console or just
 open a new console and continue working from there
-
-## TODO
-- avoid `curl` printing the whole "receiving data" thingy
