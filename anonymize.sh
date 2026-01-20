@@ -24,8 +24,8 @@ handler() {
     tput sgr0
     sleep 1
     systemctl stop tor
-    mv "$config_file.bak" $config_file
-    source $config_file &> /dev/null
+    sed -i "/ALL_PROXY/d" "$CONFIG_FILE" 
+    source "$CONFIG_FILE" > /dev/null 2>&1
     echo "[*] TOR stopped"
     exit
 }
@@ -33,21 +33,21 @@ handler() {
 trap 'handler' INT
 
 # find user's shell configuration file
-REAL_HOME=$(getent passwd $(logname) | cut -d: -f6)
-config_file="$REAL_HOME/"
+REAL_HOME=$(getent passwd "$(logname)" | cut -d: -f6)
+CONFIG_FILE="$REAL_HOME/"
 
 case $SHELL in
   */bash)
-    config_file+=".bashrc"
+    CONFIG_FILE+=".bashrc"
     ;;
   */zsh)
-    config_file+=".zshrc"
+    CONFIG_FILE+=".zshrc"
     ;;
   */fish)
-    config_file+=".config/fish/config.fish"
+    CONFIG_FILE+=".config/fish/config.fish"
     ;;
   */csh)
-    config_file+=".cshrc"
+    CONFIG_FILE+=".cshrc"
     ;;
   *)
     echo "[!] Shell not supported by script"
@@ -56,15 +56,15 @@ case $SHELL in
 esac
 
 # edit configuration file to proxify shells
-cp $config_file "$config_file.bak"
-echo "export ALL_PROXY='socks5://127.0.0.1:9050'" >> $config_file
-source $config_file &> /dev/null
+PROXY_STRING="export ALL_PROXY='socks5://127.0.0.1:9050'"
+echo "$PROXY_STRING" >> "$CONFIG_FILE"
+source "$CONFIG_FILE" > /dev/null 2>&1
 
 echo "[-] Starting TOR"
 systemctl start tor
 
 while true; do
-    printf "\r[*] Current IP: $(curl --silent https://2ip.io/)"
+    printf "\r[*] Current IP: %s" "$(curl --silent https://2ip.io/)"
     sleep $SLEEP_TIME
     systemctl restart tor
 done
